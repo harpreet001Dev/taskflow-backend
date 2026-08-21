@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  todo
+  in_progress
+  review
+  done
+}
+
+enum Priority {
+  low
+  medium
+  high
+  urgent
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orgMembers      OrgMember[]
+  taskAssignments TaskAssignment[]
+  comments        Comment[]
+
+  @@map("users")
+}
+
+model Organization {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  OrgMember[]
+  projects Project[]
+
+  @@map("organizations")
+}
+
+model OrgMember {
+  id             Int      @id @default(autoincrement())
+  organizationId Int
+  userId         Int
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  //used when we find all members of org 
+  @@index([organizationId])
+  //used to find which org user belongs to
+  @@index([userId])
+  @@map("org_members")
+}
+
+model Project {
+  id             Int       @id @default(autoincrement())
+  organizationId Int
+  name           String
+  description    String? //optional 
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  tasks Task[]
+
+  //used to find all members based on org id
+  @@index([organizationId])
+  // used to find projects by org and deleted status
+  @@index([organizationId, deletedAt])
+  @@map("projects")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  projectId   Int
+  title       String
+  description String? //description is optional
+  status      Status    @default(todo)
+  priority    Priority  @default(low)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Restrict)
+
+  assignments TaskAssignment[]
+  comments    Comment[]
+
+  //used to find tasks of project
+  @@index([projectId])
+  @@map("tasks")
+}
+
+model TaskAssignment {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //used to find task assignments by taskid
+
+  @@unique([taskId, userId])
+  @@index([taskId])
+  //used to find task assignments by user id
+  @@index([userId])
+  @@map("task_assignments")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  author User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  //used to find comments by task id 
+  @@index([taskId])
+  //used to find comments by user id 
+  @@index([userId])
+  @@map("comments")
+}
