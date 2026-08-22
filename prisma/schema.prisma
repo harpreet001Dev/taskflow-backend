@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  org_admin
+  member
+}
+
 enum Status {
   todo
   in_progress
@@ -32,6 +37,7 @@ model User {
   orgMembers      OrgMember[]
   taskAssignments TaskAssignment[]
   comments        Comment[]
+  refreshTokens   RefreshToken[]
 
   @@map("users")
 }
@@ -53,6 +59,8 @@ model OrgMember {
   organizationId Int
   userId         Int
   createdAt      DateTime @default(now())
+
+  role Role @default(member)
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -78,7 +86,7 @@ model Project {
 
   tasks Task[]
 
-  //used to find all members based on org id
+  //used to find projects by org id
   @@index([organizationId])
   // used to find projects by org and deleted status
   @@index([organizationId, deletedAt])
@@ -92,9 +100,11 @@ model Task {
   description String? //description is optional
   status      Status    @default(todo)
   priority    Priority  @default(low)
+  dueDate     DateTime? 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
+
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Restrict)
 
@@ -103,6 +113,7 @@ model Task {
 
   //used to find tasks of project
   @@index([projectId])
+  @@index([dueDate])
   @@map("tasks")
 }
 
@@ -115,9 +126,8 @@ model TaskAssignment {
   task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  //used to find task assignments by taskid
-
   @@unique([taskId, userId])
+  //used to find task assignments by taskid
   @@index([taskId])
   //used to find task assignments by user id
   @@index([userId])
@@ -140,4 +150,19 @@ model Comment {
   //used to find comments by user id 
   @@index([userId])
   @@map("comments")
+}
+
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  tokenHash String    @unique
+  userId    Int
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
 }
