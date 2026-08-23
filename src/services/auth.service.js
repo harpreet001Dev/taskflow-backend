@@ -137,7 +137,7 @@ const refresh = async (refreshToken) => {
             }
         }
     })
-    console.log(refreshTokens, "refreshTokens");
+    // console.log(refreshTokens, "refreshTokens");
 
     let storedToken = null;
     for (const tokenRecord of refreshTokens) {

@@ -1,0 +1,674 @@
+{
+  "info": {
+    "_postman_id": "c941fb4b-6d9f-44ba-a1a1-76a7928f877d",
+    "name": "TaskFlow API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24098844"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Honey\",\r\n    \"email\":\"honey1@gmail.com\",\r\n    \"password\":\"Test@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.collectionVariables.set(\r",
+                  "    \"accessToken\",\r",
+                  "    response.data.accessToken\r",
+                  ");\r",
+                  "\r",
+                  "pm.collectionVariables.set(\r",
+                  "    \"refreshToken\",\r",
+                  "    response.data.refreshToken\r",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"aman@example.com\",\r\n    \"password\":\"Password@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RefreshToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "pm.collectionVariables.set(\r",
+                  "    \"accessToken\",\r",
+                  "    response.data.accessToken\r",
+                  ");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "AddProject",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"My Demo Project\",\r\n  \"description\": \"Test Demo project\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/project/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateProject",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"another org project second time\",\r\n  \"description\":\"changed description Test Demo project\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/project/update/8",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project",
+                "update",
+                "8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetProjects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/project/?page=1&limit=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetProjectById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/project/6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteProject",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/project/8",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project",
+                "8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ProjectDashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/project/2/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project",
+                "2",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "GetAllTasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/task?page=1&limit=10&q=employee",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "todo",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "dueDateFrom",
+                  "value": "2026-08-20",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "dueDateTo",
+                  "value": "2026-08-31",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "assignee",
+                  "value": "5",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "employee"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetTaskById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/task/4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AddTask",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"projectId\": 2,\r\n  \"title\": \"Implement task API\",\r\n  \"description\": \"Create task CRUD\",\r\n  \"status\": \"todo\",\r\n  \"priority\": \"high\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/task/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateTask",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"projectId\": 2,\r\n  \"title\": \"Implement task API\",\r\n  \"description\": \"Create task CRUD\",\r\n  \"status\": \"todo\",\r\n  \"priority\": \"low\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/task/update/13",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "update",
+                "13"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteTask",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/task/delete/13",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "delete",
+                "13"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AssignTask",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userId\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/task/14/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "14",
+                "assign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UnAssignTask",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/task/14/unassign/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "14",
+                "unassign",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateBulkTaskStatus",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"taskIds\": [4,5],\r\n  \"status\": \"done\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/task/bulk-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "bulk-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AddComment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"This task is almost completed.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/task/14/comment",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "task",
+                "14",
+                "comment"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "GetJobStatus",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/job/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "job",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "AddMember",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userId\": 6\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/member/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "member",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "accessToken",
+      "secret": true
+    },
+    {
+      "key": "refreshToken",
+      "secret": true
+    }
+  ]
+}

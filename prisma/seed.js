@@ -234,6 +234,13 @@ async function seedComments(tasks, users) {
 
 //common function to call all seeders
 async function main() {
+  const existingUsers = await prisma.user.count();
+
+  if (existingUsers > 0) {
+    console.log("Database already contains seed data. Skipping seed.");
+    return;
+  }
+
   const users = await seedUsers();
 
   const organizations = await seedOrganizations();
@@ -248,7 +255,6 @@ async function main() {
 
   await seedComments(tasks, users);
 }
-
 main()
   .catch((error) => {
     console.error("Seed failed:", error);

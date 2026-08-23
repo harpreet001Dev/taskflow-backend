@@ -1,4 +1,29 @@
 services:
+
+  api:
+    build: .
+    container_name: taskflow-api
+    restart: unless-stopped
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm start"
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build: .
+    container_name: taskflow-worker
+    restart: unless-stopped
+    command: node src/workers/email.worker.js
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+
   postgres:
     image: postgres:16
     container_name: taskflow-postgres
