@@ -9,7 +9,7 @@ describe("Auth Integration Tests", () => {
                 email: "aman@example.com",
                 password: "Password@123",
             });
-        console.log(response.body);
+        // console.log(response.body);
 
 
         expect(response.statusCode).toBe(200);
