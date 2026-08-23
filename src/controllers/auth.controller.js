@@ -60,4 +60,5 @@ export const logout = asyncHandler(async (req, res) => {
         message: result.message,
     });
 });
+
 export default { register, login,refresh ,getMe,logout };

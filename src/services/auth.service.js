@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 
 const AUTH_MODE = "production"; //set auth mode test for testing
+
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
 const AUTH_CONFIG = {
     test: {
@@ -13,8 +14,8 @@ const AUTH_CONFIG = {
     },
 
     production: {
-        accessTokenExpiresIn: "15m",
-        refreshTokenExpiresInMinutes: 7 * 24 * 60,
+        accessTokenExpiresIn: "15m",  
+        refreshTokenExpiresInMinutes: 7 * 24 * 60,  //7d
     },
 };
 const currentAuthConfig = AUTH_CONFIG[AUTH_MODE];

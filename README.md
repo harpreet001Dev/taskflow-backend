@@ -284,7 +284,7 @@ http://localhost:5000/api-docs
 
 To start all services in detached mode:
 
-```bash
+```bashSda
 docker compose up --build -d
 ```
 
