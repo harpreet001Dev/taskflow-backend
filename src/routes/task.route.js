@@ -24,7 +24,7 @@ const router = express();
  * /api/task:
  *   get:
  *     summary: Get all tasks
- *     description: Get all tasks belonging to the authenticated user's organization with pagination and filters.
+ *     description: Get all tasks belonging to the authenticated user's organization with pagination, filters, and search.
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -36,6 +36,7 @@ const router = express();
  *           minimum: 1
  *           default: 1
  *         description: Page number
+ *
  *       - in: query
  *         name: limit
  *         schema:
@@ -44,35 +45,47 @@ const router = express();
  *           maximum: 100
  *           default: 20
  *         description: Number of tasks per page
+ *
  *       - in: query
  *         name: status
  *         schema:
  *           type: string
  *           enum: [todo, in_progress, review, done]
  *         description: Filter tasks by status
+ *
  *       - in: query
  *         name: priority
  *         schema:
  *           type: string
  *           enum: [low, medium, high, urgent]
  *         description: Filter tasks by priority
+ *
  *       - in: query
  *         name: assignee
  *         schema:
  *           type: integer
  *         description: Filter tasks by assigned user ID
+ *
  *       - in: query
  *         name: dueDateFrom
  *         schema:
  *           type: string
  *           format: date-time
  *         description: Filter tasks from this due date
+ *
  *       - in: query
  *         name: dueDateTo
  *         schema:
  *           type: string
  *           format: date-time
  *         description: Filter tasks up to this due date
+ *
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: Search tasks by title or description
+ *
  *     responses:
  *       200:
  *         description: All tasks are fetched successfully
